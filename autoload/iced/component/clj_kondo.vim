@@ -205,6 +205,37 @@ function! s:kondo.keyword_usages(kw_name) abort
   endif
 endfunction
 
+function! s:kondo.keyword_definition(kw_name) abort
+  if !g:iced_enable_clj_kondo_analysis
+    return {'error': 'clj-kondo: disabled'}
+  endif
+  if !g:iced_enable_clj_kondo_local_analysis
+    return {'error': 'clj-kondo local analysis: disabled'}
+  endif
+
+  if has_key(self.option, 'keyword_definition')
+    return self.option.keyword_definition(a:kw_name)
+  endif
+
+  let ns = ''
+  let name = ''
+  let idx = stridx(a:kw_name, '/')
+
+  if idx != -1
+    let ns = a:kw_name[0:idx-1]
+    let name = a:kw_name[idx+1:]
+  else
+    let name = a:kw_name
+  endif
+
+  let kws = copy(self.keywords())
+  if ! empty(ns)
+    return filter(kws, {_, v -> get(v, 'ns', '') ==# ns && get(v, 'name', '') ==# name && get(v, 'reg', '') !=# ''})
+  else
+    return filter(kws, {_, v -> get(v, 'name', '') ==# name && get(v, 'reg', '') !=# ''})
+  endif
+endfunction
+
 function! s:kondo.references(ns_name, var_name) abort
   if has_key(self.option, 'references')
     return self.option.references(a:ns_name, a:var_name)

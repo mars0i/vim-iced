@@ -120,6 +120,33 @@ function! s:kondo.keyword_usages(kw_name) abort
   return json_decode(res)
 endfunction
 
+" function! s:kondo.find_aliased_keyword(filename, kw_name) abort
+"
+"     let x = "select * from keywords where json_extract(json, '$.filename') = '/Users/uochan/src/github.com/toyokumo/kmailer/web/src-cljs/kmailer/main/home/views.cljs' and json_extract(json, '$.alias') = 'events'"
+"
+"
+" endfunction
+
+function! s:kondo.keyword_definition(kw_name) abort
+  if ! filereadable(self.db_name) | return {} | endif
+
+  let sql = ''
+  let idx = stridx(a:kw_name, '/')
+
+  if idx != -1
+    let sql = s:I.interpolate("select * from keywords where json_extract(json, '$.ns') = '${ns}' and json_extract(json, '$.name') = '${name}' and json_extract(json, '$.reg') is not null",
+          \ {'ns': a:kw_name[0:idx-1], 'name': a:kw_name[idx+1:]})
+  else
+    let sql = s:I.interpolate("select * from keywords where json_extract(json, '$.name') = '${name}' and json_extract(json, '$.reg') is not null",
+          \ {'name': a:kw_name})
+  endif
+
+  let res = trim(system(printf('sqlite3 %s ''%s''', self.db_name, sql)))
+  if empty(res) | return [] | endif
+  let res = printf('[%s]', substitute(res, '\n', ',', 'g'))
+  return json_decode(res)
+endfunction
+
 function! s:kondo.ns_path(ns_name) abort
   if ! filereadable(self.db_name) | return '' | endif
   let sql = printf(
