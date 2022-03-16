@@ -113,15 +113,24 @@ aug MyClojureSetting
 aug END
 ----
 
-==== Miscellaneous
+=== Miscellaneous
 
-vim-iced has vim-sexp's paredit mode enabled by default.  You can turn
-this off by disabling vim-sexp's key mappings.  Put a line like `let
+By default https://github.com/guns/vim-sexp[vim-sexp]'s paredit mode is
+enabled.  If, for example, you don't want typing '(' to insert a pair of parentheses, 
+you can turn this off by disabling vim-sexp's key mappings, and
+possibly adding back vim-sexp key mappings that you want to keep.  This
+won't affect vim-iced.
+
+To disable vim-sexp's key mappings, put a line like `let
 g:sexp_filetypes=''` in a startup file such as your vimrc.
-(`g:sexp_filetypes` is normally set to "clojure,scheme,lisp,timl", which
-are the filetypes for which vim-sexp's mappings will normally be
-enabled.)  You have just disabled all of vim-sexp's key mappings.  If
-you want some of those key mappings, you can re-enable the ones you want
-by copying and running parts of
-https://github.com/guns/vim-sexp/blob/12292941903d9ac8151513189d2007e1ccfc95f0/doc/vim-sexp.txt#L647-L660[this
-definition] of `s:vim_sexp_mappings()` from the vim-sexp documentation.
+(`g:sexp_filetypes` is normally set to "clojure,scheme,lisp,timl",
+which are the filetypes for which vim-sexp's mappings are normally
+enabled.)  
+
+To re-enable some of vim-sexp's key mappings, follow the instructions at
+`:help sexp-explicit-mappings` to define a function like
+`s:vim_sexp_mappings()` that is listed there.  For example, to keep all vim-sexp
+mappings except the the ones that cause matching delimiters to be
+inserted automatically, delete the last several lines from the the
+definition of `s:vim_sexp_mappings()`.  Then follow the instructions
+below the function definition.
