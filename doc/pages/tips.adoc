@@ -112,3 +112,16 @@ aug MyClojureSetting
   au FileType clojure nnoremap <buffer> <Leader>Go :<C-u>IcedEval (user/reset)<CR>
 aug END
 ----
+
+==== Miscellaneous
+
+vim-iced has vim-sexp's paredit mode enabled by default.  You can turn
+this off by disabling vim-sexp's key mappings.  Put a line like `let
+g:sexp_filetypes=''` in a startup file such as your vimrc.
+(`g:sexp_filetypes` is normally set to "clojure,scheme,lisp,timl", which
+are the filetypes for which vim-sexp's mappings will normally be
+enabled.)  You have just disabled all of vim-sexp's key mappings.  If
+you want some of those key mappings, you can re-enable the ones you want
+by copying and running parts of
+https://github.com/guns/vim-sexp/blob/12292941903d9ac8151513189d2007e1ccfc95f0/doc/vim-sexp.txt#L647-L660[this
+definition] of `s:vim_sexp_mappings()` from the vim-sexp documentation.
